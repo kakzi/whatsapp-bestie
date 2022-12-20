@@ -164,7 +164,13 @@
         // cek aplikasi di install di hosting atau local
         // 1 untuk hosting 2 untuk local
         <?php if ($settings->install_in == 1) { ?>
-            var socket = io();
+            var socket = io('<?= $settings->base_node ?>../node_modules/socket.io/client-dist/socket.io.js', {
+                transports: ['websocket',
+                    'polling',
+                    'flashsocket'
+                ]
+            });
+            // var socket = io();
         <?php } else { ?>
             var socket = io('<?= $settings->base_node ?>', {
                 transports: ['websocket',
