@@ -190,6 +190,8 @@ function sendMSG($number, $msg, $sender)
         "message" => $msg
     ];
 
+
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
@@ -200,6 +202,8 @@ function sendMSG($number, $msg, $sender)
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     $result = curl_exec($ch);
+    // var_dump($result);
+    // die;
     curl_close($ch);
     return json_decode($result, true);
 }

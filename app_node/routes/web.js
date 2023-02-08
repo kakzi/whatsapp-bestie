@@ -22,11 +22,14 @@ module.exports = function (app, sessionMap, startDEVICE) {
                     status: true,
                     response: response
                 });
+                console.log(response);
             }).catch(err => {
                 res.status(500).json({
                     status: false,
                     response: err
                 });
+
+                console.log(err);
             });
         } else {
             res.status(500).json({
