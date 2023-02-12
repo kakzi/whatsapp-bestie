@@ -739,6 +739,7 @@ class Dashboards extends CI_Controller
         $nomor = _POST('nomor');
         $pesan = _POST('pesan');
         $res = sendMSG($nomor, $pesan, $device);
+
         if ($res['status'] == true) {
           $datainsert = [
             'device' => $device,

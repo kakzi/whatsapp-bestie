@@ -122,10 +122,10 @@
                                     <div class="card-body">
                                         <h5>History Invoice</h5>
                                         <p>Invoice akan muncul setiap akhir bulan yang di kirim oleh Admin Wabestie</p>
-                                        <?php if ($user->level == 1) { ?>
+                                        <!-- <?php if ($user->level == 1) { ?>
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devices"><i class="material-icons">add</i>Add New Device</button>
 
-                                        <?php } ?>
+                                        <?php } ?> -->
                                         <table id="datatable1" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
