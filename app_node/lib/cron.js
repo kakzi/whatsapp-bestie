@@ -24,7 +24,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
 
     const interval = setRandomInterval(() => {
         const date = new Date().toLocaleString()
-        console.log("Berjalan pada : "+ date);
+        console.log("Cek data di database pada : "+ date);
         let sqlde = `SELECT device.*, account.id as id_account, account.username, account.expired,account.status FROM device INNER JOIN account ON device.pemilik = account.id`;
         db.query(sqlde, function (err, results) {
             results.forEach(async de => {
@@ -66,7 +66,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                     console.log(`Mengirim pesam ke Nomor ${number}`)
                                     switch (d.type) {
                                         case "Text":
-                                            wabestie.sendMessage(number, { text: d.pesan }).then(response => {
+                                            await wabestie.sendMessage(number, { text: d.pesan }).then(response => {
                                                 db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                 const date = new Date().toLocaleString()
                                                 console.log("Pesan Text untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -80,7 +80,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             let filename = d.media.split('/')[d.media.split('/').length - 1];
                                             let filetype = filename.split('.')[1]
                                             if (filetype == 'jpg' || filetype == 'png' || filetype == 'jpeg') {
-                                                wabestie.sendMessage(number, { image: { url: `${d.media}` }, caption: `${d.pesan}` }).then(response => {
+                                                await wabestie.sendMessage(number, { image: { url: `${d.media}` }, caption: `${d.pesan}` }).then(response => {
                                                     db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                     const date = new Date().toLocaleString()
                                                     console.log("Pesan Media untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -90,7 +90,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                                     console.log("Pesan Media untuk "+ number +" gagal terkirim pada : "+ date );
                                                 });
                                             } else if (filetype == 'pdf') {
-                                                wabestie.sendMessage(number, { document: { url: `${d.media}` }, mimetype: 'application/pdf', fileName: `${d.pesan}` }).then(response => {
+                                                await wabestie.sendMessage(number, { document: { url: `${d.media}` }, mimetype: 'application/pdf', fileName: `${d.pesan}` }).then(response => {
                                                     db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                     const date = new Date().toLocaleString()
                                                     console.log("Pesan PDF untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -118,7 +118,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                                 buttons: buttons,
                                                 headerType: 1
                                             }
-                                            wabestie.sendMessage(number, buttonMessage).then(response => {
+                                            await wabestie.sendMessage(number, buttonMessage).then(response => {
                                                 db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                 const date = new Date().toLocaleString()
                                                 console.log("Pesan Button untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -139,7 +139,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                                 footer: d.footer,
                                                 templateButtons: templateButtons
                                             }
-                                            wabestie.sendMessage(number, templateMessage).then(response => {
+                                            await wabestie.sendMessage(number, templateMessage).then(response => {
                                                 db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                 const date = new Date().toLocaleString()
                                                 console.log("Pesan Url untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -168,7 +168,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                 console.log(`Mengirim Ke Nomor ${number}`)
                                 switch (dw.type) {
                                     case "Text":
-                                        wabestie.sendMessage(number, { text: dw.pesan }).then(response => {
+                                        await wabestie.sendMessage(number, { text: dw.pesan }).then(response => {
                                             db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                             const date = new Date().toLocaleString()
                                             console.log("Pesan Text untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -182,7 +182,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                         let filename = dw.media.split('/')[dw.media.split('/').length - 1];
                                         let filetype = filename.split('.')[1]
                                         if (filetype == 'jpg' || filetype == 'png' || filetype == 'jpeg') {
-                                            wabestie.sendMessage(number, { image: { url: `${dw.media}` }, caption: `${dw.pesan}` }).then(response => {
+                                            await wabestie.sendMessage(number, { image: { url: `${dw.media}` }, caption: `${dw.pesan}` }).then(response => {
                                                 db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                                 const date = new Date().toLocaleString()
                                                 console.log("Pesan Media untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -192,7 +192,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                                 console.log("Pesan Media untuk "+ number +" berhasil terkirim pada : "+ date );
                                             });
                                         } else if (filetype == 'pdf') {
-                                            wabestie.sendMessage(number, { document: { url: `${dw.media}` }, mimetype: 'application/pdf', fileName: `${dw.pesan}` }).then(response => {
+                                            await wabestie.sendMessage(number, { document: { url: `${dw.media}` }, mimetype: 'application/pdf', fileName: `${dw.pesan}` }).then(response => {
                                                 db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                                 const date = new Date().toLocaleString()
                                                 console.log("Pesan PDF untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -215,7 +215,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             buttons: buttons,
                                             headerType: 1
                                         }
-                                        wabestie.sendMessage(number, buttonMessage).then(response => {
+                                        await wabestie.sendMessage(number, buttonMessage).then(response => {
                                             db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                             const date = new Date().toLocaleString()
                                             console.log("Pesan Button untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -235,7 +235,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             footer: dw.footer,
                                             templateButtons: templateButtons
                                         }
-                                        wabestie.sendMessage(number, templateMessage).then(response => {
+                                        await wabestie.sendMessage(number, templateMessage).then(response => {
                                             db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                             const date = new Date().toLocaleString()
                                             console.log("Pesan URL untuk "+ number +" berhasil terkirim pada : "+ date );
@@ -254,7 +254,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                 }
             })
         })
-    }, 12000, 20000);
+    }, 40000, 50000);
 
     cron.schedule('*/10 * * * * *', function () {
         console.log('cronjob reconnect device')

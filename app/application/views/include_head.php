@@ -23,9 +23,9 @@
             <li>
                 <a href="<?= base_url('autoresponder') ?>" class="active"><i class="material-icons-two-tone">message</i>Auto Reply</a>
             </li>
-            <li>
+            <!-- <li>
                 <a href="<?= base_url('limitmessage') ?>" class="active"><i class="material-icons-two-tone">message</i>Limit </a>
-            </li>
+            </li> -->
             <li>
                 <a href="<?= base_url('contacts') ?>" class="active"><i class="material-icons-two-tone">contacts</i>Contacat | Number</a>
             </li>

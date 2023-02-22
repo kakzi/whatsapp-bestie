@@ -444,7 +444,7 @@ class Dashboards extends CI_Controller
         'device' =>  $this->db->get_where('device', ['pemilik' => $id_login]),
         'nomor' => $this->db->get_where('nomor', ['make_by' => $id_login]),
         'blast' => $this->db->query("SELECT * FROM blast WHERE make_by='$id_login' ORDER BY id DESC"),
-        'label' => $this->db->query('SELECT * FROM nomor WHERE label!="" GROUP BY label ORDER BY id DESC')
+        'label' => $this->db->query("SELECT * FROM nomor WHERE make_by='$id_login' GROUP BY label ORDER BY id DESC")
       ];
       view('blast', $data);
     }
