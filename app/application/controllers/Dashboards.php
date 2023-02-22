@@ -38,7 +38,7 @@ class Dashboards extends CI_Controller
           'pemilik' => $this->session->userdata('id_login'),
           'nomor' => $nomor,
           'link_webhook' => $webhook,
-          'chunk' => 100
+          'chunk' => 15
         ]);
         $this->session->set_flashdata('success', 'The device has been successfully added.');
         redirect(base_url('home'));
@@ -248,7 +248,7 @@ class Dashboards extends CI_Controller
           $this->db->insert('nomor', [
             'nama' => $c->name,
             'nomor' => $c->number,
-            'label' => '',
+            'label' => 'Pribadi',
             'make_by' => $by
           ]);
         }
