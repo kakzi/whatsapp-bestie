@@ -186,7 +186,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
             })
         })
 
-    // });
+    });
 
     cron.schedule('*/10 * * * * *', function () {
         console.log('cronjob reconnect device')
