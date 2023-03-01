@@ -22,6 +22,9 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
         };
     };
 
+
+    
+
     const interval = setRandomInterval(() => {
         const date = new Date().toLocaleString()
         console.log("Cek data di database pada : "+ date);
@@ -50,6 +53,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                     }
                 }
                 if (sessionMap.has(parseInt(de.nomor))) {
+                    const device = parseInt(de.nomor);
                     let sql = `SELECT * FROM pesan WHERE status='MENUNGGU JADWAL' OR status='GAGAL' AND sender = ${de.nomor} ORDER BY RAND() LIMIT 1`;
                     const wabestie = sessionMap.get(parseInt(de.nomor)).chika
                     db.query(sql, function (err, result) {
@@ -69,6 +73,14 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             await wabestie.sendMessage(number, { text: d.pesan }).then(response => {
                                                 db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                 const date = new Date().toLocaleString()
+                                                let checking = `SELECT * FROM tbl_history WHERE device = ${device} LIMIT 1`;
+                                                db.query(checking, function(error, hasil){
+                                                    if(hasil != null){
+                                                        db.query(`UPDATE tbl_history SET amount = ${hasil.amount} + 1 WHERE device = ${device}`)
+                                                    } else {
+                                                        db.query(`INSERT tbl_history SET amount = 1, device = ${device}`)
+                                                    }
+                                                })
                                                 console.log("Pesan Text untuk "+ number +" berhasil terkirim pada : "+ date );
                                             }).catch(err => {
                                                 db.query(`UPDATE pesan SET status = 'GAGAL' where id = ${d.id}`)
@@ -83,6 +95,14 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                                 await wabestie.sendMessage(number, { image: { url: `${d.media}` }, caption: `${d.pesan}` }).then(response => {
                                                     db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                     const date = new Date().toLocaleString()
+                                                    let checking = `SELECT * FROM tbl_history WHERE device = ${de.nomor} LIMIT 1`;
+                                                    db.query(checking, function(error, hasil){
+                                                        if(hasil != null){
+                                                            db.query(`UPDATE tbl_history SET amount = ${hasil.amount} + 1 WHERE device = ${device}`)
+                                                        } else {
+                                                            db.query(`INSERT tbl_history SET amount = 1, device = ${device}`)
+                                                        }
+                                                    })
                                                     console.log("Pesan Media untuk "+ number +" berhasil terkirim pada : "+ date );
                                                 }).catch(err => {
                                                     db.query(`UPDATE pesan SET status = 'GAGAL' where id = ${d.id}`)
@@ -93,6 +113,14 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                                 await wabestie.sendMessage(number, { document: { url: `${d.media}` }, mimetype: 'application/pdf', fileName: `${d.pesan}` }).then(response => {
                                                     db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                     const date = new Date().toLocaleString()
+                                                    let checking = `SELECT * FROM tbl_history WHERE device = ${de.nomor} LIMIT 1`;
+                                                    db.query(checking, function(error, hasil){
+                                                        if(hasil != null){
+                                                            db.query(`UPDATE tbl_history SET amount = ${hasil.amount} + 1 WHERE device = ${device}`)
+                                                        } else {
+                                                            db.query(`INSERT tbl_history SET amount = 1, device = ${device}`)
+                                                        }
+                                                    })
                                                     console.log("Pesan PDF untuk "+ number +" berhasil terkirim pada : "+ date );
                                                 }).catch(err => {
                                                     db.query(`UPDATE pesan SET status = 'GAGAL' where id = ${d.id}`)
@@ -121,6 +149,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             await wabestie.sendMessage(number, buttonMessage).then(response => {
                                                 db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                 const date = new Date().toLocaleString()
+                                                   
                                                 console.log("Pesan Button untuk "+ number +" berhasil terkirim pada : "+ date );
                                                 
                                             }).catch(err => {
@@ -142,6 +171,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             await wabestie.sendMessage(number, templateMessage).then(response => {
                                                 db.query(`UPDATE pesan SET status = 'TERKIRIM' where id = ${d.id}`)
                                                 const date = new Date().toLocaleString()
+                                                
                                                 console.log("Pesan Url untuk "+ number +" berhasil terkirim pada : "+ date );
                                             }).catch(err => {
                                                 db.query(`UPDATE pesan SET status = 'GAGAL' where id = ${d.id}`)
@@ -171,6 +201,8 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                         await wabestie.sendMessage(number, { text: dw.pesan }).then(response => {
                                             db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                             const date = new Date().toLocaleString()
+                                        
+                                            db.query(`INSERT INTO tbl_history (device, amount) VALUES ('${device}', '1')`);
                                             console.log("Pesan Text untuk "+ number +" berhasil terkirim pada : "+ date );
                                         }).catch(err => {
                                             db.query(`UPDATE blast SET status = 'gagal' where id = ${dw.id}`)
@@ -185,6 +217,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             await wabestie.sendMessage(number, { image: { url: `${dw.media}` }, caption: `${dw.pesan}` }).then(response => {
                                                 db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                                 const date = new Date().toLocaleString()
+                                                    
                                                 console.log("Pesan Media untuk "+ number +" berhasil terkirim pada : "+ date );
                                             }).catch(err => {
                                                 db.query(`UPDATE blast SET status = 'gagal' where id = ${dw.id}`)
@@ -195,6 +228,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                             await wabestie.sendMessage(number, { document: { url: `${dw.media}` }, mimetype: 'application/pdf', fileName: `${dw.pesan}` }).then(response => {
                                                 db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                                 const date = new Date().toLocaleString()
+                                                
                                                 console.log("Pesan PDF untuk "+ number +" berhasil terkirim pada : "+ date );
                                             }).catch(err => {
                                                 db.query(`UPDATE blast SET status = 'gagal' where id = ${dw.id}`)
@@ -218,6 +252,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                         await wabestie.sendMessage(number, buttonMessage).then(response => {
                                             db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                             const date = new Date().toLocaleString()
+                                            
                                             console.log("Pesan Button untuk "+ number +" berhasil terkirim pada : "+ date );
                                         }).catch(err => {
                                             db.query(`UPDATE blast SET status = 'gagal' where id = ${dw.id}`)
@@ -238,6 +273,7 @@ module.exports = function (db, sessionMap, fs, startDEVICE) {
                                         await wabestie.sendMessage(number, templateMessage).then(response => {
                                             db.query(`UPDATE blast SET status = 'terkirim' where id = ${dw.id}`)
                                             const date = new Date().toLocaleString()
+                                            
                                             console.log("Pesan URL untuk "+ number +" berhasil terkirim pada : "+ date );
                                         }).catch(err => {
                                             db.query(`UPDATE blast SET status = 'gagal' where id = ${dw.id}`)
